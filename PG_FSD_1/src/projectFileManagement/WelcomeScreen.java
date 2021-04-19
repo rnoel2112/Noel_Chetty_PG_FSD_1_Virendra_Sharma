@@ -39,7 +39,7 @@ public class WelcomeScreen {
 		// Lets use users default directory for demo
 		String current = System.getProperty("user.home");
 		
-		current += "/test"; // For testing etc..remove before submission.
+		current += "/test/test"; // For testing etc..remove before submission.
 		
 	  	System.out.println ("\nYour Current Home Dir : "+ current);
 	  	
@@ -57,7 +57,7 @@ public class WelcomeScreen {
 		do {
 			
 			choice =ui.userSelection();
-			
+			System.out.println("\n");
 			switch (choice) {
 			case 1:
 				if (list.isEmpty()) {
@@ -146,7 +146,7 @@ public class WelcomeScreen {
 					System.out.println(list.get(filename));
 									
 				} else {
-					System.out.println("Error =>] " + filename + " ] not found ");
+					System.out.println("Error => file[ " + filename + " ] not found, please check the directoy list ");
 				}
 				break;
 				
@@ -156,7 +156,7 @@ public class WelcomeScreen {
 			default:
 				System.out.println("Why are we here - as i have handled all exceptions ");
 			}	
-			
+			System.out.println("\n");
 			// System.out.flush(); 
 			// Flash welcome screen after each operations
 			WelcomeScreen.welcome();
