@@ -8,37 +8,54 @@ import java.io.FileNotFoundException;
 
 public class WelcomeScreen {
 
-	public void welcome() {
-		System.out.println("\n\nWelcome to File Management Sysetem ");
+	public static void welcome() {
+		// welcome screen for file management
+		// with all necessary options
+		System.out.println("**************************************************************************** ");
+		System.out.println("Welcome to File Management Sysetem ");
 		System.out.println("By Noel Chetty");
-		System.out.println("Key Features Supported :");
-		System.out.println("\n1: List of flies");
-		System.out.println("2: Add a specified file			<file name >");
-		System.out.println("3: Delete a specified file		<file name >");
-		System.out.println("4: Find / Searcha specified file	<file name >");
-		System.out.println("5: Exit Application \n ");
-
+		System.out.println("\nKey Features Supported ");
+		System.out.println("1: List of flies");
+		System.out.println("2: Add a specified file			<file name>");
+		System.out.println("3: Delete a specified file		<file name>");
+		System.out.println("4: Find / Searcha specified file	<file name>");
+		System.out.println("5: Exit Application ");
+		System.out.println("**************************************************************************** ");
 	}
 	
 	public static void main(String[] args) {
 		
-		WelcomeScreen wc = new WelcomeScreen();
-		wc.welcome();
+		// Made it static as we need the same message for all instances.
+		WelcomeScreen.welcome();
+	
+		// Lets create a class to accept user inputs both menu option and the filename
+		// with nice validation etc
 		UserInput ui = new UserInput();
+		
+		// Lets create a class to return list of all valid files in a directory
+		// exclude hidden files & directory
 		DirectoryList dr = new DirectoryList();
 		
+		// Lets use users default directory for demo
 		String current = System.getProperty("user.home");
-		current += "/test/test"; // remove before submission.
 		
-	  	System.out.println ("Your Home Dir : "+ current);	  
-		//TreeSet list = dr.getDirFileList("/Users/noelchetty/test");
+		current += "/test"; // For testing etc..remove before submission.
 		
+	  	System.out.println ("\nYour Current Home Dir : "+ current);
+	  	
+	  	//Why TreeMap 
+	  	//1.TreeMap sorts all its entries according to their natural ordering alphabetical /ascending order order. 
+	  	//2.I would like to get the value string with nice formatted details of the file like full path, size etc. 
 	  	TreeMap<String, String >list = dr.getDirFileList(current);
 		
 		String filename;
 		int choice;
-	
+		
+		//
+		// Lets do in a do-while loop,until user plan to exit with option to exit
+		//
 		do {
+			
 			choice =ui.userSelection();
 			
 			switch (choice) {
@@ -55,10 +72,13 @@ public class WelcomeScreen {
 				break;
 			
 			case 2: // Add a file
+				
 				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
 				filename = ui.userSelection(choice);
-			
+				
+				// lets provide an escape route in case users does not know the file name
 				if (filename.equalsIgnoreCase("x")) break;
+				System.out.println("\n\n");
 				
 				if (list.containsKey(filename)) {
 					System.out.println("Error => File:[" +filename + "] already exist  ");
@@ -75,20 +95,24 @@ public class WelcomeScreen {
 					      }
 				} catch (FileNotFoundException e) {
 					      System.out.println("Error/IO Exception => File:[" + filename + "] not added");
-					      System.out.println("Dir path or file does not exists");
+					      System.out.println("Directory path or file does not exists");
 					     // e.printStackTrace();
 				} catch (IOException ex) {    // error handling separated from the main logic
 						System.out.println("Error/IO Exception => File:[" + filename + "] not added");
-					    System.out.println("Dir path or file does not exists");
+					    System.out.println("Directory path or file does not exists");
 				}
 				//System.out.println("\n\n");
 				break;
 		
 			case 3: // Delete a specified file
+		
 				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
 				filename = ui.userSelection(choice);
 				
+				// lets provide an escape route in case users does not know the file name
 				if (filename.equalsIgnoreCase("x")) break;
+				
+				System.out.println("\n\n");
 				
 				if (list.containsKey(filename)) {	 
 					 File newfile = new File(current+"/"+filename); 
@@ -97,24 +121,29 @@ public class WelcomeScreen {
 					    list = dr.getDirFileList(current);
 					    System.out.println("File:[ "+ newfile.getName()+"] is deleted: ");
 					 } else {
-						 System.out.println("Error:[" + filename+ "] file cannot be deleted / unknow issue ");
+						 System.out.println("Error => file [" + filename+ "] cannot be deleted / unknow issue ");
 					 }
 	
 				} else {
-					System.out.println("File:[" + filename + "] not found / not deleted");
+					System.out.println("Error => file [" + filename + "] not found and not deleted");
 				}
 				
 				System.out.println("\n\n");
 				break;
 		   
 			case 4: // Search
+				
 				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
 				filename = ui.userSelection(choice);
 				
+				// lets provide an escape route in case users does not know the file name
 				if (filename.equalsIgnoreCase("x")) break;
 				
+				System.out.println("\n\n");
+				
 				if (list.containsKey(filename)) {
-					System.out.println("Success = > ["+filename + "] found ");
+					System.out.println("Success = > ["+filename + "] found details as below");
+					System.out.println(list.get(filename));
 									
 				} else {
 					System.out.println("Error =>] " + filename + " ] not found ");
@@ -127,10 +156,12 @@ public class WelcomeScreen {
 			default:
 				System.out.println("Why are we here - as i have handled all exceptions ");
 			}	
+			
 			// System.out.flush(); 
-			wc.welcome();
-		} while (choice !=5);
-		
+			// Flash welcome screen after each operations
+			WelcomeScreen.welcome();
+			
+		} while (choice !=5); // Continue until exit
 	}
 
 }
