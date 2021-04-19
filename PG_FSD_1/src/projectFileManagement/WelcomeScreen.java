@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-
 public class WelcomeScreen {
 
 	public static void welcome() {
@@ -39,7 +38,7 @@ public class WelcomeScreen {
 		// Lets use users default directory for demo
 		String current = System.getProperty("user.home");
 		
-		current += "/test/test"; // For testing etc..remove before submission.
+		// current += "/test/test"; // For testing etc..remove before submission.
 		
 	  	System.out.println ("\nYour Current Home Dir : "+ current);
 	  	
