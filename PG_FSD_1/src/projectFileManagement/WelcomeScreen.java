@@ -14,18 +14,28 @@ public class WelcomeScreen {
 		System.out.println("Welcome to File Management Sysetem ");
 		System.out.println("By Noel Chetty");
 		System.out.println("\nKey Features Supported ");
-		System.out.println("1: List of flies");
-		System.out.println("2: Add a specified file			<file name>");
-		System.out.println("3: Delete a specified file		<file name>");
-		System.out.println("4: Find / Searcha specified file	<file name>");
-		System.out.println("5: Exit Application ");
+		System.out.println("1: List of files ");
+		System.out.println("2: File Management[Add/Delete/Search]");
+		System.out.println("3: Exit Application ");
 		System.out.println("**************************************************************************** ");
 	}
+	
+	public static void fileManagementMenu() {
+				// with all necessary options
+				System.out.println("**************************************************************************** ");
+				System.out.println("File Management Sysetem - Options");		
+				System.out.println("4: Search 	a file");
+				System.out.println("5: Add		a file");
+				System.out.println("6: Delete 	a file");
+				System.out.println("7: Return to Main Menu ");
+				System.out.println("**************************************************************************** ");
+	}
+	
 	
 	public static void main(String[] args) {
 		
 		// Made it static as we need the same message for all instances.
-		WelcomeScreen.welcome();
+		//WelcomeScreen.welcome();
 	
 		// Lets create a class to accept user inputs both menu option and the filename
 		// with nice validation etc
@@ -38,7 +48,7 @@ public class WelcomeScreen {
 		// Lets use users default directory for demo
 		String current = System.getProperty("user.home");
 		
-		// current += "/test/test"; // For testing etc..remove before submission.
+		current += "/test"; // For testing etc..remove before submission.
 		
 	  	System.out.println ("\nYour Current Home Dir : "+ current);
 	  	
@@ -49,13 +59,13 @@ public class WelcomeScreen {
 		
 		String filename;
 		int choice;
-		
+
 		//
 		// Lets do in a do-while loop,until user plan to exit with option to exit
 		//
 		do {
-			
-			choice =ui.userSelection();
+			WelcomeScreen.welcome();
+			choice =ui.userSelection(1,3);
 			System.out.println("\n");
 			switch (choice) {
 			case 1:
@@ -71,96 +81,112 @@ public class WelcomeScreen {
 				break;
 			
 			case 2: // Add a file
+				do {
+					WelcomeScreen:fileManagementMenu();	
+					choice = ui.userSelection(4,7);	
+					switch (choice) {
+						case 4: // Search
+							System.out.print ("\n\nEnter the filename to search or enter 7 to return to return:");
+							filename = ui.userSelection(choice);
+							
+							// lets provide an escape route in case users does not know the file name
+							if (filename.equalsIgnoreCase("7")) break;
+							System.out.println("\n\n");
+							
+							if (list.containsKey(filename)) {
+								System.out.println("Success => ["+filename + "] found details as below");
+								System.out.println(list.get(filename));
+												
+							} else {
+								System.out.println("Error => file[ " + filename + " ] not found, please check the directoy list ");
+							}
+							System.out.println("\n\n");
+							break;
+							
+						case 5: // Add a file
+							System.out.print ("\n\nEnter the filename to add or enter 7 to return to return:");
+							filename = ui.userSelection(choice);
+		
+							// lets provide an escape route in case users does not know the file name
+							if (filename.equalsIgnoreCase("7")) break;
+							System.out.println("\n\n");
+							
+							if (list.containsKey(filename)) {
+								System.out.println("Error => File:[" +filename + "] already exist  ");
+								System.out.println("\n\n");
+								break;
+							}
+								
+							try {
+									 File newfile = new File(current+"/"+filename);     
+								      if (newfile.createNewFile()) {
+								    	list = dr.getDirFileList(current);
+								        System.out.println("File:["+ newfile.getName() + "] created" );
+								        System.out.println(list.get(filename));
+								        
+								      } else {
+								        System.out.println("Error => File:[" + newfile.getName() + "] already exists / unknow issue ");
+								      }
+							} catch (FileNotFoundException e) {
+								      System.out.println("Error/IO Exception => File:[" + filename + "] not added");
+								      System.out.println("Directory path or file does not exists");
+								     // e.printStackTrace();
+							} catch (IOException ex) {    // error handling separated from the main logic
+									System.out.println("Error/IO Exception => File:[" + filename + "] not added");
+								    System.out.println("Directory path or file does not exists");
+							}
+							
+							System.out.println("\n\n");
+							break;
+							
+							case 6: // Delete a specified file
+								
+								System.out.print ("\n\nEnter the filename to delete or enter 7 to return to return:");
+								filename = ui.userSelection(choice);
+			
+								// lets provide an escape route in case users does not know the file name
+								if (filename.equalsIgnoreCase("7")) break;
+
+							
+								System.out.println("\n\n");
+							
+								if (list.containsKey(filename)) {	 
+									File newfile = new File(current+"/"+filename); 
+								 
+									if (newfile.delete()) {
+										list = dr.getDirFileList(current);
+										System.out.println("File:[ "+ newfile.getName()+"] is deleted: ");
+									} else {
+										System.out.println("Error => file [" + filename+ "] cannot be deleted / unknow issue ");
+									}
 				
-				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
-				filename = ui.userSelection(choice);
-				
-				// lets provide an escape route in case users does not know the file name
-				if (filename.equalsIgnoreCase("x")) break;
-				System.out.println("\n\n");
-				
-				if (list.containsKey(filename)) {
-					System.out.println("Error => File:[" +filename + "] already exist  ");
-					break;
-				}
+								} else {
+									System.out.println("Error => file [" + filename + "] not found and not deleted");
+								}
+							
+								System.out.println("\n\n");
+								break;
+						}
 					
-				try {
-						 File newfile = new File(current+"/"+filename);     
-					      if (newfile.createNewFile()) {
-					    	list = dr.getDirFileList(current);
-					        System.out.println("File:["+ newfile.getName() + "] created" );
-					      } else {
-					        System.out.println("Error => File:[" + newfile.getName() + "] already exists / unknow issue ");
-					      }
-				} catch (FileNotFoundException e) {
-					      System.out.println("Error/IO Exception => File:[" + filename + "] not added");
-					      System.out.println("Directory path or file does not exists");
-					     // e.printStackTrace();
-				} catch (IOException ex) {    // error handling separated from the main logic
-						System.out.println("Error/IO Exception => File:[" + filename + "] not added");
-					    System.out.println("Directory path or file does not exists");
-				}
-				//System.out.println("\n\n");
+					}while (choice !=7);
+				
+				System.out.print ("\nReturning to main menu\n\n");
+				WelcomeScreen.welcome();
 				break;
 		
-			case 3: // Delete a specified file
-		
-				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
-				filename = ui.userSelection(choice);
-				
-				// lets provide an escape route in case users does not know the file name
-				if (filename.equalsIgnoreCase("x")) break;
-				
-				System.out.println("\n\n");
-				
-				if (list.containsKey(filename)) {	 
-					 File newfile = new File(current+"/"+filename); 
-					 
-					 if (newfile.delete()) {
-					    list = dr.getDirFileList(current);
-					    System.out.println("File:[ "+ newfile.getName()+"] is deleted: ");
-					 } else {
-						 System.out.println("Error => file [" + filename+ "] cannot be deleted / unknow issue ");
-					 }
-	
-				} else {
-					System.out.println("Error => file [" + filename + "] not found and not deleted");
-				}
-				
-				System.out.println("\n\n");
+			case 3: // Exit 
+				System.out.println("\nExiting Application - Thank you for using our application\n");
 				break;
-		   
-			case 4: // Search
-				
-				System.out.print ("Enter the filename to add or enter X/x to return to main menu:");
-				filename = ui.userSelection(choice);
-				
-				// lets provide an escape route in case users does not know the file name
-				if (filename.equalsIgnoreCase("x")) break;
-				
-				System.out.println("\n\n");
-				
-				if (list.containsKey(filename)) {
-					System.out.println("Success = > ["+filename + "] found details as below");
-					System.out.println(list.get(filename));
-									
-				} else {
-					System.out.println("Error => file[ " + filename + " ] not found, please check the directoy list ");
-				}
-				break;
-				
-			case 5: // Exit 
-					System.out.println("\n Thank you for using our application\n");
-					break;
 			default:
 				System.out.println("Why are we here - as i have handled all exceptions ");
-			}	
+			}
+	
 			System.out.println("\n");
 			// System.out.flush(); 
 			// Flash welcome screen after each operations
-			WelcomeScreen.welcome();
+			// WelcomeScreen.welcome();
 			
-		} while (choice !=5); // Continue until exit
+		} while (choice !=3); // Continue until exit
 	}
 
 }

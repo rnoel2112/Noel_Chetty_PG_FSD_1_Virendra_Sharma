@@ -4,23 +4,23 @@ import java.util.Scanner;
 
 public class UserInput {
 	
-	public int userSelection() {
+	public int userSelection(int fromMenu, int toMenu) {
 		
-		System.out.print("Enter your choice :");
+		System.out.print("Enter your choice : ");
 		Scanner sc = new Scanner(System.in);
 		int choice = 0;
 		
 		// Lets ensure we get the right input that are valid
 		do {	
 		    while (!sc.hasNextInt()) {
-		       System.out.print("Please enter a valid choice [1 to 5 ]:");
+		       System.out.print("Please enter a valid choice ["+ fromMenu+ " - " +toMenu + "] :");
 		       sc.next();
 		    }
 		    choice = sc.nextInt();
-		    if (choice > 5 || choice <= 0) 
-		    	System.out.print("Please enter a valid choice [1 to 5 ]:");
-		   
-		} while (choice > 5 || choice <= 0) ;
+		    if (choice > toMenu || choice < fromMenu ) 
+		    	 System.out.print("Please enter a valid choice ["+ fromMenu+ " - " +toMenu + "] :");
+		    
+		} while (choice > toMenu || choice < fromMenu) ;
 		
 		// sc.close();
 		return choice;
